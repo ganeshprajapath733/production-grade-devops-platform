@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-platform-deployment
+  namespace: devops-platform
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: devops-platform
+
+  template:
+    metadata:
+      labels:
+        app: devops-platform
+
+    spec:
+      imagePullSecrets:
+      - name: ecr-secret
+
+      containers:
+      - name: devops-platform-container
+        image: 298493766489.dkr.ecr.ap-south-1.amazonaws.com/production-devops-platform-repo:v1
+
+        ports:
+        - containerPort: 5000
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "200m"
+            memory: "256Mi"
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 5000
+          initialDelaySeconds: 15
+          periodSeconds: 20
