@@ -17,3 +17,7 @@ output "ec2_public_ip" {
 output "ecr_repo_url" {
   value = aws_ecr_repository.app_repo.repository_url
 }
+
+output "cloudwatch_alarm_name" {
+  value = aws_cloudwatch_metric_alarm.high_cpu_alarm.alarm_name
+}
