@@ -29,6 +29,16 @@ jobs:
           docker build -t production-devops-platform-repo ./app
           docker tag production-devops-platform-repo:latest 298493766489.dkr.ecr.ap-south-1.amazonaws.com/production-devops-platform-repo:latest
 
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: production-devops-platform-repo:latest
+          format: table
+          exit-code: 0
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: CRITICAL,HIGH
+
       - name: Push Docker Image to ECR
         run: |
           docker push 298493766489.dkr.ecr.ap-south-1.amazonaws.com/production-devops-platform-repo:latest
